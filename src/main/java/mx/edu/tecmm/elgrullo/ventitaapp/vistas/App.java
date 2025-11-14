@@ -36,6 +36,8 @@ public class App extends javax.swing.JFrame {
     public void initScreen(String user){
         imgLogoUser.setIcon(ImageUtils.getImageIcon(getClass(), "user_logo.png",150,150));
         lbUser.setText(user);
+        imgLogo.setIcon(ImageUtils.getImageIcon(getClass(), "logosistema.png", 500, 500));
+        
         /// buttons
         initButtons();
         actualizarFecha();
@@ -61,6 +63,7 @@ public class App extends javax.swing.JFrame {
         lbSaldoCaja = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         pnlMain = new javax.swing.JPanel();
+        imgLogo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema Ventita");
@@ -189,17 +192,10 @@ public class App extends javax.swing.JFrame {
         getContentPane().add(navPaanel, java.awt.BorderLayout.LINE_START);
 
         pnlMain.setBackground(new java.awt.Color(249, 250, 251));
+        pnlMain.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
-        pnlMain.setLayout(pnlMainLayout);
-        pnlMainLayout.setHorizontalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 833, Short.MAX_VALUE)
-        );
-        pnlMainLayout.setVerticalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 546, Short.MAX_VALUE)
-        );
+        imgLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnlMain.add(imgLogo, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
 
@@ -266,6 +262,7 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnReportes;
     private javax.swing.JButton btnVentas;
+    private javax.swing.JLabel imgLogo;
     private javax.swing.JLabel imgLogoUser;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lbFecha;
