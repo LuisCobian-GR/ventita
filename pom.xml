@@ -10,4 +10,26 @@
         <maven.compiler.release>24</maven.compiler.release>
         <exec.mainClass>mx.edu.tecmm.elgrullo.ventitaapp.VentitaApp</exec.mainClass>
     </properties>
+    
+    <repositories>
+        <repository>
+                <id>objectdb</id>
+                <name>ObjectDB Repository</name>
+                <url>https://m2.objectdb.com</url>
+        </repository>
+    </repositories>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.objectdb</groupId>
+            <artifactId>objectdb</artifactId>
+            <version>2.8.1</version> 
+        </dependency>
+
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+        </dependency>
+    </dependencies>
 </project>
