@@ -5,6 +5,7 @@
 package mx.edu.tecmm.elgrullo.ventitaapp.views.panels;
 
 import java.awt.Font;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import mx.edu.tecmm.elgrullo.ventitaapp.dao.DaoProducto;
@@ -94,6 +95,11 @@ public class PnlProducts extends javax.swing.JPanel {
         btnModificar1.setText("Deshabilitar");
         btnModificar1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnModificar1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnModificar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificar1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -150,8 +156,29 @@ public class PnlProducts extends javax.swing.JPanel {
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
             actualizarTabla();
+        } else {
+            JOptionPane.showMessageDialog(App.mainFrame, "Tienes que seleccionar un registro");
         }
     }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnModificar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificar1ActionPerformed
+        // TODO add your handling code here:
+        int i = jTable1.getSelectedRow();
+        if(i>=0){
+            long idProduct = Long.parseLong(jTable1.getValueAt(i, 0).toString()); 
+            var product = DaoProducto.find(idProduct); 
+            var dialogResult = JOptionPane.showConfirmDialog(App.mainFrame, "¿Esta seguro de dar de baja el producto?"); 
+            if(dialogResult == JOptionPane.YES_OPTION){
+                product.setViable(false);
+                if(DaoProducto.update(product)){                    
+                    JOptionPane.showMessageDialog(App.mainFrame, "Se desahabilito el producto");                    
+                    actualizarTabla();
+                } 
+            }
+        } else {
+            JOptionPane.showMessageDialog(App.mainFrame, "Tienes que seleccionar un registro");
+        }
+    }//GEN-LAST:event_btnModificar1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,16 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package mx.edu.tecmm.elgrullo.ventitaapp.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.TypedQuery;
 import mx.edu.tecmm.elgrullo.ventitaapp.models.Producto;
 
 /**
- *
+ * 
  * @author coby_
  */
 public class DaoProducto {
@@ -42,7 +38,7 @@ public class DaoProducto {
         var em = ConnectionService.getEntityManager(); 
         List<Producto> listaProductos; 
         try{            
-            TypedQuery<Producto> query = em.createQuery("SELECT p FROM Producto p", Producto.class);
+            var query = em.createQuery("SELECT p FROM Producto p WHERE p.viable", Producto.class);
             listaProductos = query.getResultList();
         }catch(Exception ex){
             listaProductos = new ArrayList<>();
@@ -55,6 +51,7 @@ public class DaoProducto {
        
         return listaProductos;        
     }
+    
     
     public static String[][] toMatrixData(){
         var lista = findAll(); 
@@ -70,7 +67,6 @@ public class DaoProducto {
     public static Producto find(long id) {
         Producto producto = null;
         var em = ConnectionService.getEntityManager();
-
         try {
             producto = em.find(Producto.class, id);
         } catch (Exception ex) {
