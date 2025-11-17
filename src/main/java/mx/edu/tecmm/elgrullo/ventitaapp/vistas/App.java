@@ -1,11 +1,19 @@
 package mx.edu.tecmm.elgrullo.ventitaapp.vistas;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ButtonUtils.setColorButton;
+import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_PRIMARY;
+import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_LIGHT_TEXT;
+import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_SELECTED;
+import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_COLOR;
 import mx.edu.tecmm.elgrullo.ventitaapp.utils.ImageUtils;
+import mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels.PnlProducts;
 
 /**
  * Ventana principal que permite controlar todo el flujo de la aplicación 
@@ -13,14 +21,7 @@ import mx.edu.tecmm.elgrullo.ventitaapp.utils.ImageUtils;
  */
 public class App extends javax.swing.JFrame {
     
-    private static final Color PRIMARY_COLOR = new Color(10,35,66); 
-    private static final Color SECONDARY_COLOR = new Color(30, 58, 138);
-    private static final Color PRIMARY_ACCENT = new Color(29,78,216);
-    
-    private static final Color BUTTON_PRIMARY = new Color(30, 58, 138);
-    private static final Color BUTTON_SELECTED = new Color(59, 130, 246);
-    private static final Color BUTTON_PRIMARY_TEXT = new Color(255, 255, 255);
-    
+    public static App mainFrame; 
     private final int DELAY_TIMER = 30_000; 
     
     
@@ -29,7 +30,8 @@ public class App extends javax.swing.JFrame {
      */
     public App(String user) {
         initComponents();
-        initScreen(user);         
+        initScreen(user);
+        mainFrame = this;
     }
 
     
@@ -164,7 +166,7 @@ public class App extends javax.swing.JFrame {
                         .addGroup(navPaanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(navPaanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(lbUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(imgLogoUser, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+                                .addComponent(imgLogoUser, javax.swing.GroupLayout.PREFERRED_SIZE, 168, Short.MAX_VALUE))
                             .addComponent(lbSaldoCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -194,6 +196,7 @@ public class App extends javax.swing.JFrame {
         pnlMain.setBackground(new java.awt.Color(249, 250, 251));
         pnlMain.setLayout(new java.awt.BorderLayout());
 
+        imgLogo.setBackground(new java.awt.Color(249, 250, 251));
         imgLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pnlMain.add(imgLogo, java.awt.BorderLayout.CENTER);
 
@@ -205,6 +208,8 @@ public class App extends javax.swing.JFrame {
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
         // TODO add your handling code here:
         activeButton(btnProductos);
+        var pnl = new PnlProducts(); 
+        updatePanelSection(pnl);
     }//GEN-LAST:event_btnProductosActionPerformed
 
     // <editor-fold defaultstate="collapsed" desc="Metodos utilitarios">
@@ -222,21 +227,11 @@ public class App extends javax.swing.JFrame {
      * Metodo que reiniciar los colores de los botones
      */
     private void initButtons(){
-        setColorButton(btnVentas, BUTTON_PRIMARY, BUTTON_PRIMARY_TEXT);
-        setColorButton(btnProductos, BUTTON_PRIMARY, BUTTON_PRIMARY_TEXT);
-        setColorButton(btnReportes, BUTTON_PRIMARY, BUTTON_PRIMARY_TEXT);
+        setColorButton(btnVentas, BUTTON_PRIMARY, PRIMARY_LIGHT_TEXT);
+        setColorButton(btnProductos, BUTTON_PRIMARY, PRIMARY_LIGHT_TEXT);
+        setColorButton(btnReportes, BUTTON_PRIMARY, PRIMARY_LIGHT_TEXT);
     }
     
-    /**
-     * Metodo que permite cambiar el color de un boton
-     * @param button boton que cambia de color
-     * @param back color del fondo del boton
-     * @param fore color de texto del boton 
-     */
-    private void setColorButton(JButton button, Color back, Color fore){
-        button.setBackground(back);
-        button.setForeground(fore);
-    }
     
     /**
      * Metodo que activa el timer que se ejecutara cada medio segundo
@@ -255,6 +250,15 @@ public class App extends javax.swing.JFrame {
         String labelFecha = "El grullo, Jalisco " + LocalDateTime.now().format(formatter); 
         lbFecha.setText(labelFecha);
     }
+    
+    private void updatePanelSection(JPanel panel ){
+        this.remove(pnlMain);
+        pnlMain = panel; 
+        this.add(pnlMain, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    
     // </editor-fold>
 
     

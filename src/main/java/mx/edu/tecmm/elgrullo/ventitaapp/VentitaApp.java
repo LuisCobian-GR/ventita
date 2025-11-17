@@ -5,6 +5,7 @@
 package mx.edu.tecmm.elgrullo.ventitaapp;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.App;
 
 /**
@@ -14,19 +15,12 @@ import mx.edu.tecmm.elgrullo.ventitaapp.vistas.App;
 public class VentitaApp {
 
     public static void main(String[] args) {
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            
-//        }
-        //</editor-fold>
-
-        /* Create and display the form */
+        
+        UIManager.put("OptionPane.yesButtonText", "Sí");
+        UIManager.put("OptionPane.noButtonText", "No");
+        UIManager.put("OptionPane.cancelButtonText", "Cancelar");
+        UIManager.put("OptionPane.okButtonText", "Aceptar");
+        
         java.awt.EventQueue.invokeLater(() -> {
             var app = new App("Luis Cobián"); 
             app.setExtendedState(JFrame.MAXIMIZED_BOTH); 
