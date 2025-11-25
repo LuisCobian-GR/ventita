@@ -13,6 +13,7 @@ import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_PRIMARY;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_SELECTED;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_COLOR;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_LIGHT_TEXT;
+import mx.edu.tecmm.elgrullo.ventitaapp.utils.JTextFieldUtil;
 
 /**
  *
@@ -320,7 +321,7 @@ public abstract class DialogUpdateProducts extends javax.swing.JDialog {
      */
     private void txtCodigoBarrasKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoBarrasKeyTyped
         // TODO add your handling code here:
-        ConvertToMayus(evt);
+        JTextFieldUtil.convertToMayus(evt);
         lbErrorCodigoBarras.setVisible(false);
     }//GEN-LAST:event_txtCodigoBarrasKeyTyped
 
@@ -330,7 +331,7 @@ public abstract class DialogUpdateProducts extends javax.swing.JDialog {
      */
     private void txtDescripcionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripcionKeyTyped
         // TODO add your handling code here:
-        ConvertToMayus(evt);
+        JTextFieldUtil.convertToMayus(evt);
         lbErrorDescripcion.setVisible(false);
     }//GEN-LAST:event_txtDescripcionKeyTyped
 
@@ -396,18 +397,7 @@ public abstract class DialogUpdateProducts extends javax.swing.JDialog {
         initButtons();
         setColorButton(btn, BUTTON_SELECTED, PRIMARY_COLOR);
     }
-    /**
-     * Metodo comun que usara para no repetir codigo en los dos eventos de los compontes de texto
-     * @param evt 
-     */
-    private void ConvertToMayus(java.awt.event.KeyEvent evt){
-        char c = evt.getKeyChar();
-
-        if (Character.isLetter(c)) {
-            evt.setKeyChar(Character.toUpperCase(c));
-        }
-    } 
-    
+       
     
     
     // <editor-fold defaultstate="collapsed" desc="Metodo para comunicar estado afuera">

@@ -1,7 +1,11 @@
 
 package mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels;
 
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoProducto;
+import mx.edu.tecmm.elgrullo.ventitaapp.models.Producto;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ButtonUtils.setColorButton;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_PRIMARY;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_LIGHT_TEXT;
@@ -9,6 +13,7 @@ import static mx.edu.tecmm.elgrullo.ventitaapp.utils.TableUtils.configTable;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.App;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.dialogs.DialogAddProduct;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.dialogs.DialogUpdateProduct;
+import mx.edu.tecmm.elgrullo.ventitaapp.vistas.dialogs.DialogUpdateProducts;
 
 /**
  * Panel de visualizacion del modulo de catalogo
@@ -30,6 +35,20 @@ public class PnlProducts extends javax.swing.JPanel {
     private void initScreen(){
         initButtons();
         configTable(tblProductos);
+        initTable();                
+    }
+    
+    private void initTable(){        
+        List<Producto> datos = DaoProducto.findAll(); 
+        String[] columns = {"ID", "Codigo", "Descripcion", "Precio"}; 
+        String[][] data = new String[datos.size()][];
+        int index = 0; 
+        for (Producto producto : datos) {
+            data[index] = producto.toArray(); 
+            index ++;
+        }
+        DefaultTableModel model = new DefaultTableModel(data, columns); 
+        tblProductos.setModel(model);
     }
     
     /**
@@ -158,6 +177,9 @@ public class PnlProducts extends javax.swing.JPanel {
         var dialog = new DialogAddProduct(App.mainFrame, true); 
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
+        if(dialog.getResult() == DialogUpdateProducts.DialogResult.OK){
+            initTable();
+        }
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     /**
@@ -166,19 +188,38 @@ public class PnlProducts extends javax.swing.JPanel {
      */
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-        var dialog = new DialogUpdateProduct(App.mainFrame, true,10); 
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+        int selectedIndex = tblProductos.getSelectedRow(); 
+        if(selectedIndex >=0){
+            long idProducto = Long.parseLong(tblProductos.getValueAt(selectedIndex, 0).toString());
+            var dialog = new DialogUpdateProduct(App.mainFrame, true,idProducto); 
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+            if(dialog.getResult() == DialogUpdateProducts.DialogResult.OK){
+                initTable();
+            }
+        }else {
+            JOptionPane.showMessageDialog(App.mainFrame, "Primero tienes que seleccionar", "Cuidado", JOptionPane.WARNING_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnDeshabilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeshabilitarActionPerformed
         // TODO add your handling code here:
         var res = JOptionPane.showConfirmDialog(App.mainFrame, "¿Esta seguro que quiere deshabilitar el producto?", "Precaución: Esta cambio no se puede deshacer", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
         if(res == JOptionPane.YES_OPTION){
-            System.out.println("Dijo que si");
-        }else 
-        {
-            System.out.println("Dijo que no");
+            int i = tblProductos.getSelectedRow(); 
+            if(i>=0){
+                long id = Long.parseLong(tblProductos.getValueAt(i, 0).toString());
+                Producto producto = DaoProducto.find(id); 
+                producto.setEstaActivo(false);
+                var resUpdate = DaoProducto.update(producto); 
+                if(resUpdate){
+                    JOptionPane.showMessageDialog(App.mainFrame, "Se deshabilito de forma correcta", "Cuidado", JOptionPane.INFORMATION_MESSAGE);
+                    initTable();
+                }
+            }else {
+                JOptionPane.showMessageDialog(App.mainFrame, "Primero tienes que seleccionar", "Cuidado", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnDeshabilitarActionPerformed
 

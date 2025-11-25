@@ -14,6 +14,8 @@ import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_SELECTED;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_COLOR;
 import mx.edu.tecmm.elgrullo.ventitaapp.utils.ImageUtils;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels.PnlProducts;
+import mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels.PnlVenta;
+import mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels.pnlReportes;
 
 /**
  * Ventana principal que permite controlar todo el flujo de la aplicación 
@@ -119,6 +121,11 @@ public class App extends javax.swing.JFrame {
         btnVentas.setBorder(null);
         btnVentas.setBorderPainted(false);
         btnVentas.setFocusPainted(false);
+        btnVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVentasActionPerformed(evt);
+            }
+        });
 
         btnProductos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnProductos.setText("Productos");
@@ -136,6 +143,11 @@ public class App extends javax.swing.JFrame {
         btnReportes.setBorder(null);
         btnReportes.setBorderPainted(false);
         btnReportes.setFocusPainted(false);
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportesActionPerformed(evt);
+            }
+        });
 
         lbSaldoCaja.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lbSaldoCaja.setForeground(new java.awt.Color(255, 255, 255));
@@ -206,11 +218,23 @@ public class App extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        // TODO add your handling code here:
         activeButton(btnProductos);
         var pnl = new PnlProducts(); 
         updatePanelSection(pnl);
     }//GEN-LAST:event_btnProductosActionPerformed
+
+    private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
+        activeButton(btnVentas);
+        var pnl = new PnlVenta(); 
+        updatePanelSection(pnl);
+    }//GEN-LAST:event_btnVentasActionPerformed
+
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
+        // TODO add your handling code here:
+        activeButton(btnReportes);
+        var panel = new pnlReportes(); 
+        updatePanelSection(panel);
+    }//GEN-LAST:event_btnReportesActionPerformed
 
     // <editor-fold defaultstate="collapsed" desc="Metodos utilitarios">
     

@@ -9,7 +9,7 @@ import javax.swing.UIManager;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.App;
 
 /**
- *
+ * Metodo que permite inicializar el programa 
  * @author coby_
  */
 public class VentitaApp {
