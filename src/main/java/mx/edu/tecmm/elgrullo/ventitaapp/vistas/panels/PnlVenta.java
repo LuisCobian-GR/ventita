@@ -1,11 +1,16 @@
 package mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoProducto;
+import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoVenta;
 import mx.edu.tecmm.elgrullo.ventitaapp.models.DetalleVentas;
+import mx.edu.tecmm.elgrullo.ventitaapp.models.Venta;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ButtonUtils.setColorButton;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_PRIMARY;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_LIGHT_TEXT;
@@ -27,11 +32,11 @@ public class PnlVenta extends javax.swing.JPanel {
         initComponents();
         configTable(tblVenta);        
         setColorButton(btnGuardar, BUTTON_PRIMARY, PRIMARY_LIGHT_TEXT);
-        initTable(); 
         setDate(); 
         SwingUtilities.invokeLater(() -> {
             txtCodigoBarras.requestFocus();
         });
+        initSell();
     }
     
     
@@ -39,7 +44,31 @@ public class PnlVenta extends javax.swing.JPanel {
      * Metodo para procesar la venta
      */
     public void processSell(){
-        System.out.println("Aqui voy a ser la venta");
+        long lastId = DaoVenta.getLastId();
+        Venta venta = new Venta();
+        venta.setId(lastId+1);
+        venta.setFechaRegistro(new Date());
+        double total = 0;
+        
+        for (DetalleVentas det : detalles) {
+            venta.addDetalle(det);// <-- IMPORTANTE
+             total += det.getPrice() * det.getCant();
+        }
+        
+         venta.setTotal(total);
+        
+        boolean res = DaoVenta.register(venta);
+        /// mandar imprimir un ticket
+        JOptionPane.showMessageDialog(this, "Se registro correctamente", "Correcto",JOptionPane.INFORMATION_MESSAGE);
+        initSell();
+    }
+    
+    
+    private void initSell(){
+        detalles = new ArrayList<>();
+        initTable();
+        long lastId = DaoVenta.getLastId();
+        lbFolio.setText("FOLIO: " + String.format("%05d", lastId+1));
     }
     
     /**
@@ -77,7 +106,7 @@ public class PnlVenta extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
+        lbFolio = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblVenta = new javax.swing.JTable();
         lblFecha = new javax.swing.JLabel();
@@ -129,9 +158,9 @@ public class PnlVenta extends javax.swing.JPanel {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(249, 250, 251));
-        jLabel4.setText("FOLIO: 00001");
+        lbFolio.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbFolio.setForeground(new java.awt.Color(249, 250, 251));
+        lbFolio.setText("FOLIO: 00001");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -147,7 +176,7 @@ public class PnlVenta extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lbFolio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -155,7 +184,7 @@ public class PnlVenta extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel4)
+                .addComponent(lbFolio)
                 .addGap(91, 91, 91)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
@@ -253,11 +282,20 @@ public class PnlVenta extends javax.swing.JPanel {
      * @param evt 
      */
     private void txtCodigoBarrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoBarrasActionPerformed
+        String codebar = txtCodigoBarras.getText();
+        var producto = DaoProducto.getByCodigoBarras(codebar);
+        if(producto != null) {
+            var detalle = new DetalleVentas();
+            detalle.setCant(1);
+            detalle.setCodebar(producto.getCodigobarras());
+            detalle.setDescripcion(producto.getDescripcion());
+            detalle.setPrice(producto.getPrecio());
+            detalles.add(detalle); 
+            initTable();
+        } else{
+            JOptionPane.showMessageDialog(this, "No se encontro el producto", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+        } 
         txtCodigoBarras.setText("");
-        var detalle = new DetalleVentas(); 
-        detalle.dumpData();
-        detalles.add(detalle); 
-        initTable();
     }//GEN-LAST:event_txtCodigoBarrasActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -295,8 +333,8 @@ public class PnlVenta extends javax.swing.JPanel {
     public void deleteSelected(){
         int currentSelected = tblVenta.getSelectedRow();
         if(currentSelected == -1) return; 
-        long id = Long.parseLong(tblVenta.getValueAt(currentSelected, 0).toString()); 
-        Optional<DetalleVentas> firstRow = detalles.stream().filter(detalle -> detalle.getId() == id).findFirst();        
+        String codebar = tblVenta.getValueAt(currentSelected, 0).toString(); 
+        Optional<DetalleVentas> firstRow = detalles.stream().filter(detalle -> detalle.getCodebar().equalsIgnoreCase(codebar)).findFirst();        
         firstRow.ifPresent(detalles::remove);
         initTable();
     }
@@ -306,10 +344,10 @@ public class PnlVenta extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbFolio;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JTable tblVenta;

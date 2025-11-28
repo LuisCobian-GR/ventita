@@ -4,13 +4,22 @@
  */
 package mx.edu.tecmm.elgrullo.ventitaapp.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 /**
  *
  * @author coby_
  */
+@Entity
 public class DetalleVentas {
     
+    @Id
+    @GeneratedValue
     private long id; 
+    private String codebar;
     private int cant; 
     private String descripcion; 
     private double price; 
@@ -64,6 +73,8 @@ public class DetalleVentas {
         this.descripcion = "PRODUCTO " + random; 
         this.price = random; 
     }
+       
+    
     
     /**
      * Metodo que permite regresar el arreglo con los datos del producto
@@ -71,11 +82,26 @@ public class DetalleVentas {
      */
     public String[] toArray(){
         String[] product = new String[4];
-        product[0] = "" + id; 
+        product[0] = codebar; 
         product[1] = "" + cant; 
         product[2] = descripcion; 
         product[3] = String.format("%.2f", price);
         return product;
+    }
+
+    
+
+    public String getCodebar() {
+        return codebar;
+    }
+
+    public void setCodebar(String codebar) {
+        this.codebar = codebar;
+    }
+
+    @Override
+    public String toString() {
+        return "DetalleVentas{" + "id=" + id + ", codebar=" + codebar + ", cant=" + cant + ", descripcion=" + descripcion + ", price=" + price +  '}';
     }
     
     

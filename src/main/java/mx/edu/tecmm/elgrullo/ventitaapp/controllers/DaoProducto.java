@@ -2,6 +2,8 @@ package mx.edu.tecmm.elgrullo.ventitaapp.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import mx.edu.tecmm.elgrullo.ventitaapp.models.Producto;
 
 /**
@@ -28,7 +30,10 @@ public class DaoProducto {
             isSuccess = false; 
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
-        }
+        } finally{
+            em.close();
+            em.getEntityManagerFactory().close();
+        }        
         return isSuccess;
     }
     
@@ -98,6 +103,31 @@ public class DaoProducto {
             em.getEntityManagerFactory().close();
         }        
         return listaProductos;
+    }
+    
+    
+    public static Producto getByCodigoBarras(String codigo) {
+        Producto producto = null;
+        var em = ConnectionService.getEntityManager();
+
+        try {
+            TypedQuery<Producto> query = em.createQuery(
+                "SELECT p FROM Producto p WHERE p.codigobarras = :codigo AND p.estaActivo",
+                Producto.class
+            );
+            query.setParameter("codigo", codigo);
+
+            producto = query.getSingleResult(); 
+        } catch (NoResultException ex) {
+            producto = null; 
+        } catch (Exception ex) {
+            System.out.println("ERROR: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            em.close();
+        }
+
+        return producto;
     }
     
 }

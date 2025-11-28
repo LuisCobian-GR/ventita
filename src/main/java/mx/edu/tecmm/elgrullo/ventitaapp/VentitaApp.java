@@ -6,6 +6,8 @@ package mx.edu.tecmm.elgrullo.ventitaapp;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoVenta;
+import mx.edu.tecmm.elgrullo.ventitaapp.models.DetalleVentas;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.App;
 
 /**
@@ -20,6 +22,13 @@ public class VentitaApp {
         UIManager.put("OptionPane.noButtonText", "No");
         UIManager.put("OptionPane.cancelButtonText", "Cancelar");
         UIManager.put("OptionPane.okButtonText", "Aceptar");
+        
+        var venta = DaoVenta.getVentaConDetalles(1);
+        
+        System.out.println(venta);
+//        for (DetalleVentas detalle : venta.getDetalles()) {
+//            System.out.println(detalle);
+//        }
         
         java.awt.EventQueue.invokeLater(() -> {
             var app = new App("Luis Cobián"); 
