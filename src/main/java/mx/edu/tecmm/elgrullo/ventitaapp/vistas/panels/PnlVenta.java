@@ -2,6 +2,8 @@ package mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import mx.edu.tecmm.elgrullo.ventitaapp.models.DetalleVentas;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ButtonUtils.setColorButton;
@@ -9,6 +11,7 @@ import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_PRIMARY;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_LIGHT_TEXT;
 import mx.edu.tecmm.elgrullo.ventitaapp.utils.JTextFieldUtil;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.TableUtils.configTable;
+import mx.edu.tecmm.elgrullo.ventitaapp.utils.TimeUtils;
 
 /**
  * Ventana de ventas para poder dar de alta 
@@ -22,11 +25,23 @@ public class PnlVenta extends javax.swing.JPanel {
      */
     public PnlVenta() {
         initComponents();
-        configTable(tblVenta);
+        configTable(tblVenta);        
         setColorButton(btnGuardar, BUTTON_PRIMARY, PRIMARY_LIGHT_TEXT);
         initTable(); 
+        setDate(); 
+        SwingUtilities.invokeLater(() -> {
+            txtCodigoBarras.requestFocus();
+        });
     }
-
+    
+    
+    /**
+     * Metodo para procesar la venta
+     */
+    public void processSell(){
+        System.out.println("Aqui voy a ser la venta");
+    }
+    
     /**
      * Inicializar la tabla con los datos que se tienen en la lista
      */
@@ -65,7 +80,7 @@ public class PnlVenta extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblVenta = new javax.swing.JTable();
-        jLabel5 = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(249, 250, 251));
 
@@ -108,6 +123,11 @@ public class PnlVenta extends javax.swing.JPanel {
 
         btnGuardar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         btnGuardar.setText("Vender");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(249, 250, 251));
@@ -179,7 +199,10 @@ public class PnlVenta extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jLabel5.setText("jLabel5");
+        lblFecha.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblFecha.setForeground(new java.awt.Color(10, 35, 66));
+        lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblFecha.setText("jLabel5");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -194,7 +217,7 @@ public class PnlVenta extends javax.swing.JPanel {
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(19, 19, 19))
         );
@@ -204,7 +227,7 @@ public class PnlVenta extends javax.swing.JPanel {
                 .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel5))
+                    .addComponent(lblFecha))
                 .addGap(17, 17, 17)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
@@ -215,12 +238,20 @@ public class PnlVenta extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Metodo para que solo acepte mayusculas 
+     * @param evt 
+     */
     private void txtCodigoBarrasKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoBarrasKeyTyped
         // TODO add your handling code here:
         JTextFieldUtil.convertToMayus(evt);
         
     }//GEN-LAST:event_txtCodigoBarrasKeyTyped
 
+    /**
+     * Evento para poder trabar con el codigo de barras
+     * @param evt 
+     */
     private void txtCodigoBarrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoBarrasActionPerformed
         txtCodigoBarras.setText("");
         var detalle = new DetalleVentas(); 
@@ -229,6 +260,46 @@ public class PnlVenta extends javax.swing.JPanel {
         initTable();
     }//GEN-LAST:event_txtCodigoBarrasActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        processSell();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    /**
+     * Pone el letrero en la parte superior con la fecha 
+     */
+    private void setDate(){
+        lblFecha.setText("CAJA 1: " + TimeUtils.getDateTodayWithoutTime());
+    }
+    
+    /**
+     * Permite aumentar la seleccion segun el incremento que se mande 
+     * @param change incremento 
+     */
+    public void tableChangeSelected(int change){
+        int currentSelected = tblVenta.getSelectedRow();
+        int totalRows = tblVenta.getRowCount(); 
+        if(totalRows == 0) return ; 
+        if(currentSelected == -1){
+            tblVenta.setRowSelectionInterval(0, 0);
+            return; 
+        }
+        currentSelected += change; 
+        
+        if(currentSelected < 0 || currentSelected >= totalRows) return; 
+        tblVenta.setRowSelectionInterval(currentSelected, currentSelected);
+    }
+    
+    /**
+     * Metodo que permite eliminar el registro que tenga seleccionado 
+     */
+    public void deleteSelected(){
+        int currentSelected = tblVenta.getSelectedRow();
+        if(currentSelected == -1) return; 
+        long id = Long.parseLong(tblVenta.getValueAt(currentSelected, 0).toString()); 
+        Optional<DetalleVentas> firstRow = detalles.stream().filter(detalle -> detalle.getId() == id).findFirst();        
+        firstRow.ifPresent(detalles::remove);
+        initTable();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
@@ -236,10 +307,10 @@ public class PnlVenta extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JTable tblVenta;
     protected javax.swing.JTextField txtCodigoBarras;

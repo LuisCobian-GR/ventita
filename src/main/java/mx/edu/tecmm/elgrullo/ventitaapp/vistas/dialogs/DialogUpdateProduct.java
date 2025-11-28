@@ -5,6 +5,8 @@
 package mx.edu.tecmm.elgrullo.ventitaapp.vistas.dialogs;
 
 import java.awt.Frame;
+import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoProducto;
+import mx.edu.tecmm.elgrullo.ventitaapp.models.Producto;
 
 /**
  * Metodo que se usara para el procedimiento de la modificacion 
@@ -12,20 +14,28 @@ import java.awt.Frame;
  */
 public class DialogUpdateProduct extends DialogUpdateProducts {
 
-    public DialogUpdateProduct(Frame parent, boolean modal, int productId) {
+    Producto producto;
+    
+    public DialogUpdateProduct(Frame parent, boolean modal, long productId) {
         super(parent, modal);
         setTitle("Modificar Producto");
         lblTitle.setText("Modificar producto: " + productId);
         
-        txtCodigoBarras.setText("Prueba");
-        txtDescripcion.setText("Prueba");
-        txtPrecio.setText("0.00");
+        var producto = DaoProducto.find(productId);
+        
+        txtCodigoBarras.setText(producto.getCodigobarras());
+        txtDescripcion.setText(producto.getDescripcion());
+        txtPrecio.setText(String.format("%.2f", producto.getPrecio()));
+        this.producto = producto;
     }
 
     @Override
     protected boolean processToProductUpdate(String codebar, String description, double price) {
-        System.out.println("Es solo una prueba");
-        return true;
+        producto.setCodigobarras(codebar);
+        producto.setDescripcion(description);
+        producto.setPrecio(price);        
+        var res = DaoProducto.update(producto);         
+        return res;
     }
     
     

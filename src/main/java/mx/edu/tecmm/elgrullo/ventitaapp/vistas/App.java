@@ -1,10 +1,14 @@
 package mx.edu.tecmm.elgrullo.ventitaapp.vistas;
 
 import java.awt.BorderLayout;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ButtonUtils.setColorButton;
@@ -13,6 +17,7 @@ import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_LIGHT_TEXT
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.BUTTON_SELECTED;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ColorApp.PRIMARY_COLOR;
 import mx.edu.tecmm.elgrullo.ventitaapp.utils.ImageUtils;
+import mx.edu.tecmm.elgrullo.ventitaapp.utils.TimeUtils;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels.PnlProducts;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels.PnlVenta;
 import mx.edu.tecmm.elgrullo.ventitaapp.vistas.panels.pnlReportes;
@@ -29,13 +34,60 @@ public class App extends javax.swing.JFrame {
     
     /**
      * Creates new form App
+     * @param user
      */
     public App(String user) {
         initComponents();
         initScreen(user);
         mainFrame = this;
+        specialKeyConfig(); 
     }
 
+    private void specialKeyConfig(){
+         JRootPane root = this.getRootPane();                
+        listenerAction(root, "SELL_PANEL", KeyStroke.getKeyStroke("F1"));
+        listenerAction(root, "PRODUCTS_PANEL", KeyStroke.getKeyStroke("F2"));
+        listenerAction(root, "REPORT_PANEL", KeyStroke.getKeyStroke("F3"));
+        
+        
+        listenerAction(root, "UP", KeyStroke.getKeyStroke("UP"));
+        listenerAction(root, "DOWN", KeyStroke.getKeyStroke("DOWN"));
+        listenerAction(root, "DEL", KeyStroke.getKeyStroke("F12"));        
+        listenerAction(root, "SELL", KeyStroke.getKeyStroke("F10"));
+    }
+    
+    
+    /**
+     * Escucha las acciones de las teclas que se presionan cuando el panel esta activo
+     * @param root
+     * @param keyName
+     * @param key 
+     */
+    private void listenerAction(JRootPane root, String keyName, KeyStroke key){
+        System.out.println("Entro al listener");
+        root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+            .put(key, keyName);
+
+            root.getActionMap().put(keyName, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println(keyName);
+                    if(pnlMain instanceof PnlVenta pnlVenta){
+                        switch (keyName) {
+                            case "UP" -> pnlVenta.tableChangeSelected(-1);                     
+                            case "DOWN" -> pnlVenta.tableChangeSelected(1);
+                            case "DEL" -> pnlVenta.deleteSelected();
+                            case "SELL" -> pnlVenta.processSell();
+                        }
+                    }
+                    switch (keyName) {
+                            case "SELL_PANEL" -> btnVentasActionPerformed(null);                     
+                            case "PRODUCTS_PANEL" -> btnProductosActionPerformed(null);
+                            case "REPORT_PANEL" -> btnReportesActionPerformed(null);                            
+                    }
+                }
+            });
+    }
     
     public void initScreen(String user){
         imgLogoUser.setIcon(ImageUtils.getImageIcon(getClass(), "user_logo.png",150,150));
@@ -262,18 +314,14 @@ public class App extends javax.swing.JFrame {
      */
     private void actualizarFecha(){
                 
-        updateLabelFecha();        
-        new Timer(DELAY_TIMER, e -> updateLabelFecha()).start();
+        TimeUtils.updateLabelFecha(lbFecha);        
+        new Timer(DELAY_TIMER, e -> TimeUtils.updateLabelFecha(lbFecha)).start();
     }
     
     /**
      * Metodo para actualizar el label que esta en la barra de estatus
      */
-    private void updateLabelFecha(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); 
-        String labelFecha = "El grullo, Jalisco " + LocalDateTime.now().format(formatter); 
-        lbFecha.setText(labelFecha);
-    }
+    
     
     private void updatePanelSection(JPanel panel ){
         this.remove(pnlMain);

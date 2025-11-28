@@ -5,6 +5,8 @@
 package mx.edu.tecmm.elgrullo.ventitaapp.vistas.dialogs;
 
 import java.awt.Frame;
+import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoProducto;
+import mx.edu.tecmm.elgrullo.ventitaapp.models.Producto;
 
 /**
  *
@@ -20,8 +22,14 @@ public class DialogAddProduct extends DialogUpdateProducts {
 
     @Override
     protected boolean processToProductUpdate(String codebar, String description, double price) {
-        System.out.println("Se envio el valor");
-        return true;
+        var producto = new Producto(); 
+        producto.setCodigobarras(codebar);
+        producto.setDescripcion(description);
+        producto.setPrecio(price); 
+        producto.setEstaActivo(true);
+        System.out.println(producto);
+        var res = DaoProducto.add(producto);
+        return res;
     }
     
     

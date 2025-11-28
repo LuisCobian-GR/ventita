@@ -39,7 +39,6 @@ public class TableUtils {
         header.setForeground(PRIMARY_LIGHT_TEXT);
         
         header.setOpaque(true);
-
-        
+            
     }
 }
