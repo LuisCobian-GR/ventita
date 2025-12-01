@@ -9,7 +9,7 @@ import javax.persistence.TypedQuery;
 import mx.edu.tecmm.elgrullo.ventitaapp.models.Venta;
 
 /**
- *
+ * 
  * @author coby_
  */
 public class DaoVenta {
@@ -59,14 +59,18 @@ public class DaoVenta {
         return lastId;  
     }
     
-    
+    /**
+     * Metodo que permite traer la venta al momento de mandar su impresión 
+     * @param idVenta
+     * @return 
+     */
     public static Venta getVentaConDetalles(long idVenta) {
         Venta venta = null;
         var em = ConnectionService.getEntityManager();
 
         try {
             TypedQuery<Venta> query = em.createQuery(
-                "SELECT v FROM Venta v WHERE v.id = :idVenta",
+                "SELECT DISTINCT v FROM Venta v JOIN FETCH v.detalles WHERE v.id = :idVenta",
                 Venta.class
             );
             query.setParameter("idVenta", idVenta);

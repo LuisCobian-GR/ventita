@@ -21,7 +21,7 @@ public class Venta {
     private Date fechaRegistro;
     private double total;
     
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<DetalleVentas> detalles = new ArrayList<>();
 
     public Venta() {

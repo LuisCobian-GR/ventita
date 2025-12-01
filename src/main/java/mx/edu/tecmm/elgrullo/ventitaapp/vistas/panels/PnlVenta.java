@@ -5,10 +5,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoProducto;
 import mx.edu.tecmm.elgrullo.ventitaapp.controllers.DaoVenta;
+import mx.edu.tecmm.elgrullo.ventitaapp.controllers.TicketService;
 import mx.edu.tecmm.elgrullo.ventitaapp.models.DetalleVentas;
 import mx.edu.tecmm.elgrullo.ventitaapp.models.Venta;
 import static mx.edu.tecmm.elgrullo.ventitaapp.utils.ButtonUtils.setColorButton;
@@ -59,6 +61,9 @@ public class PnlVenta extends javax.swing.JPanel {
         
         boolean res = DaoVenta.register(venta);
         /// mandar imprimir un ticket
+        TicketService ticket = new TicketService();
+        ticket.printVenta(venta);
+                
         JOptionPane.showMessageDialog(this, "Se registro correctamente", "Correcto",JOptionPane.INFORMATION_MESSAGE);
         initSell();
     }

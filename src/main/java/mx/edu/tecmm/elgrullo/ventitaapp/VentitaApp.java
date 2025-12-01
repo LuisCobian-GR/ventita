@@ -23,7 +23,7 @@ public class VentitaApp {
         UIManager.put("OptionPane.cancelButtonText", "Cancelar");
         UIManager.put("OptionPane.okButtonText", "Aceptar");
         
-        var venta = DaoVenta.getVentaConDetalles(1);
+        var venta = DaoVenta.getVentaConDetalles(2);
         
         System.out.println(venta);
 //        for (DetalleVentas detalle : venta.getDetalles()) {
